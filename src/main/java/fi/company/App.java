@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -27,7 +28,7 @@ public class App extends Application {
 
     private Button clear;
     private TextArea tekstiAlue;
-    private Button color;
+    private ColorPicker colorPicker;
 
     @Override
     public void start(Stage stage) {
@@ -37,9 +38,8 @@ public class App extends Application {
         ResourceBundle labels = ResourceBundle.getBundle("ui", locale);
         String title = labels.getString("title");
 
-        MenuBar menuBar = new MenuBar();
-        VBox vBox = new VBox(menuBar);
-        HBox hBox = new HBox(vBox);
+        MenuBar menuBar = new MenuBar(); // top panel
+        VBox vBoxtop = new VBox(menuBar); // top panel
         FileChooser fileChooser = new FileChooser();
 
         // File menu
@@ -132,22 +132,22 @@ public class App extends Application {
                         menuBar.getMenus().add(about);
 
         // Buttons
-        clear = new Button("clear");
-            hBox.getChildren().add(clear);
-                clear.setOnAction(actionEvent -> { tekstiAlue.clear(); });
+            colorPicker = new ColorPicker();
+                vBoxtop.getChildren().add(colorPicker);
+                    colorPicker.setOnAction(actionEvent -> { ColorPicker colorPicker = new ColorPicker();colorPicker.getValue(); }); // opens colorPicker
+
+            clear = new Button("Clear");
+                vBoxtop.getChildren().add(clear);
+                    clear.setOnAction(actionEvent -> { tekstiAlue.clear(); }); // clears textField
 
 
         // UI
         tekstiAlue = new TextArea();
-            tekstiAlue.setOnKeyPressed(event -> {
-                if(event.getCode() == KeyCode.TAB) {
-                    int kursori = tekstiAlue.getCaretPosition();
-                    tekstiAlue.replaceText(kursori - 1, kursori, "    ");
-                }
-            });
+            // replaces tab with 4 whitespaces
+            tekstiAlue.setOnKeyPressed(event -> { if(event.getCode() == KeyCode.TAB) { int position =  tekstiAlue.getCaretPosition();tekstiAlue.replaceText(position-1,position, "    "); }});
 
         BorderPane layout = new BorderPane();
-        layout.setTop(menuBar);
+        layout.setTop(vBoxtop);
         layout.setCenter(tekstiAlue);
 
         Scene scene = new Scene(layout, 600, 480);
