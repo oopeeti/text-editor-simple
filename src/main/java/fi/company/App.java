@@ -126,7 +126,7 @@ public class App extends Application {
                         alert.showAndWait();
                     });
 
-                    //adding about to the menubar
+                    //adding about to the menuBar
                         about.getItems().add(aboutApp);
                         menuBar.getMenus().add(about);
 
@@ -135,10 +135,14 @@ public class App extends Application {
         vBox.getChildren().add(clear);
             clear.setOnAction(actionEvent -> { tekstiAlue.clear(); });
 
-
-
         // UI
         tekstiAlue = new TextArea();
+            tekstiAlue.setOnKeyPressed(key -> {
+                KeyCode keyCode = key.getCode();
+                if (keyCode.equals(KeyCode.TAB)) {
+                    tekstiAlue.getText().replaceAll("    ", "\t");
+                }
+            });
 
         BorderPane layout = new BorderPane();
         layout.setTop(hBox);
