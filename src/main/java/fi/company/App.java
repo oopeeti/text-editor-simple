@@ -13,7 +13,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * JavaFX App
@@ -25,9 +30,16 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+
+        Locale locale = Locale.getDefault();
+        System.out.println(locale);
+        ResourceBundle labels = ResourceBundle.getBundle("ui", locale);
+        String title = labels.getString("title");
+
         MenuBar menuBar = new MenuBar();
         VBox vBox = new VBox(menuBar);
         HBox hBox = new HBox(vBox);
+        FileChooser fileChooser = new FileChooser();
 
         // File menu
         Menu file = new Menu("File");
@@ -36,24 +48,34 @@ public class App extends Application {
             MenuItem newItem = new MenuItem("New");
                 KeyCombination newItemKey = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
                     newItem.setAccelerator(newItemKey);
-                    newItem.setOnAction(actionEvent -> { System.out.println("CTRL+N"); });
+                        newItem.setOnAction(actionEvent -> { System.out.println("CTRL+N"); });
+
+                 newItem.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
 
             // OPEN
             MenuItem open = new MenuItem("Open");
                 KeyCombination openKey = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
                     open.setAccelerator(openKey);
-                    open.setOnAction(actionEvent -> { System.out.println("CTRL+O"); });
+                        open.setOnAction(actionEvent -> { System.out.println("CTRL+O"); });
+
+                 newItem.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
 
             // SAVE
             MenuItem save = new MenuItem("Save");
                 KeyCombination saveKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
                     save.setAccelerator(saveKey);
-                    save.setOnAction(actionEvent -> { System.out.println("CTRL+S"); });
+                        save.setOnAction(actionEvent -> { System.out.println("CTRL+S"); });
+
+            // EXIT - this closes the application
+            MenuItem exit = new MenuItem("Exit");
+                    exit.setOnAction(ActionEvent -> { System.exit(0); });
+
 
                     // adding the menuItems to the menuBar
                         file.getItems().add(newItem);
                         file.getItems().add(open);
                         file.getItems().add(save);
+                        file.getItems().add(exit);
                         menuBar.getMenus().add(file);
 
         // Edit menu
@@ -63,19 +85,19 @@ public class App extends Application {
             MenuItem cut = new MenuItem("Cut");
                 KeyCombination cutKey = new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN);
                     cut.setAccelerator(cutKey);
-                    cut.setOnAction(actionEvent -> { System.out.println("CTRL+X"); });
+                        cut.setOnAction(actionEvent -> { System.out.println("CTRL+X"); });
 
             // COPY
             MenuItem copy = new MenuItem("Copy");
                  KeyCombination copyKey = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
                  copy.setAccelerator(copyKey);
-                 copy.setOnAction(actionEvent -> { System.out.println("CTRL+C"); });
+                    copy.setOnAction(actionEvent -> { System.out.println("CTRL+C"); });
 
             // PASTE
             MenuItem paste = new MenuItem("Paste");
                 KeyCombination pasteKey = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
                 paste.setAccelerator(pasteKey);
-                paste.setOnAction(actionEvent -> { System.out.println("CTRL+V"); });
+                    paste.setOnAction(actionEvent -> { System.out.println("CTRL+V"); });
 
                 // adding the menuItems to the menuBar
                     edit.getItems().add(cut);
@@ -87,21 +109,31 @@ public class App extends Application {
         // Run menu
         Menu run = new Menu("Run");
         MenuItem RunCompile = new MenuItem("Run & Compile");
+
+
         run.getItems().add(RunCompile);
         menuBar.getMenus().add(run);
 
         // About
         Menu about = new Menu("About");
         MenuItem aboutApp = new MenuItem("About this application");
-        about.getItems().add(aboutApp);
-        menuBar.getMenus().add(about);
+
+            // Making a alert window
+                    about.setOnAction(actionEvent -> {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("About this application");
+                        alert.setContentText("This is text editor application made by Olli-Pekka");
+                        alert.showAndWait();
+                    });
+
+                    //adding about to the menubar
+                        about.getItems().add(aboutApp);
+                        menuBar.getMenus().add(about);
 
         // Buttons
         clear = new Button("clear");
         vBox.getChildren().add(clear);
-            clear.setOnAction(actionEvent -> {
-                tekstiAlue.clear();
-                    });
+            clear.setOnAction(actionEvent -> { tekstiAlue.clear(); });
 
 
 
