@@ -27,6 +27,7 @@ public class App extends Application {
 
     private Button clear;
     private TextArea tekstiAlue;
+    private Button color;
 
     @Override
     public void start(Stage stage) {
@@ -58,7 +59,7 @@ public class App extends Application {
                     open.setAccelerator(openKey);
                         open.setOnAction(actionEvent -> { System.out.println("CTRL+O"); });
 
-                 newItem.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
+                 open.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
 
             // SAVE
             MenuItem save = new MenuItem("Save");
@@ -132,20 +133,21 @@ public class App extends Application {
 
         // Buttons
         clear = new Button("clear");
-        vBox.getChildren().add(clear);
-            clear.setOnAction(actionEvent -> { tekstiAlue.clear(); });
+            hBox.getChildren().add(clear);
+                clear.setOnAction(actionEvent -> { tekstiAlue.clear(); });
+
 
         // UI
         tekstiAlue = new TextArea();
-            tekstiAlue.setOnKeyPressed(key -> {
-                KeyCode keyCode = key.getCode();
-                if (keyCode.equals(KeyCode.TAB)) {
-                    tekstiAlue.getText().replaceAll("    ", "\t");
+            tekstiAlue.setOnKeyPressed(event -> {
+                if(event.getCode() == KeyCode.TAB) {
+                    int kursori = tekstiAlue.getCaretPosition();
+                    tekstiAlue.replaceText(kursori - 1, kursori, "    ");
                 }
             });
 
         BorderPane layout = new BorderPane();
-        layout.setTop(hBox);
+        layout.setTop(menuBar);
         layout.setCenter(tekstiAlue);
 
         Scene scene = new Scene(layout, 600, 480);
