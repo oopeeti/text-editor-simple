@@ -147,6 +147,7 @@ public class App extends Application {
         Scene scene = new Scene(layout, 600, 480);
 
         stage.setScene(scene);
+        stage.setTitle(title);
         stage.show();
     }
 
