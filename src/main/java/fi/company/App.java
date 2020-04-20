@@ -18,14 +18,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
  * JavaFX App
+ * Made by Olli-Pekka Nikka
  */
 public class App extends Application {
 
+    // showing attributes
     private Button clear;
     private TextArea tekstiAlue;
     private ColorPicker colorPicker;
@@ -33,72 +37,80 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
 
-        Locale locale = Locale.getDefault();
-        System.out.println(locale);
-        ResourceBundle labels = ResourceBundle.getBundle("ui", locale);
-        String title = labels.getString("title");
+        // LOCALIZATION SETTINGS
+            Locale locale = Locale.getDefault();
+            System.out.println(locale);
+            ResourceBundle labels = ResourceBundle.getBundle("ui", locale);
+            String title = labels.getString("title");
 
-        MenuBar menuBar = new MenuBar(); // top panel
-        VBox vBoxtop = new VBox(menuBar); // top panel
-        FileChooser fileChooser = new FileChooser();
+        // HANDLING FILES
+            File file = new File("resources/textFile.txt");
 
-        // File menu
-        Menu file = new Menu("File");
+        // ELEMENTS FOR STAGE
+            MenuBar menuBar = new MenuBar(); // top panel
+            VBox vBoxtop = new VBox(menuBar); // top panel
+
+        // FILE MENU
+            Menu fileMenu = new Menu("File");
 
             // NEW ITEM
-            MenuItem newItem = new MenuItem("New");
-                KeyCombination newItemKey = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
-                    newItem.setAccelerator(newItemKey);
-                        newItem.setOnAction(actionEvent -> { System.out.println("CTRL+N"); });
+                MenuItem newItem = new MenuItem("New");
+                    KeyCombination newItemKey = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
+                     newItem.setAccelerator(newItemKey);
+                            newItem.setOnAction(actionEvent -> { System.out.println("CTRL+N"); });
 
-                 newItem.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
+                        // FileChooser
+                            FileChooser fileChooser = new FileChooser();
+                                newItem.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
 
             // OPEN
-            MenuItem open = new MenuItem("Open");
-                KeyCombination openKey = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-                    open.setAccelerator(openKey);
-                        open.setOnAction(actionEvent -> { System.out.println("CTRL+O"); });
+                MenuItem open = new MenuItem("Open");
+                    KeyCombination openKey = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+                        open.setAccelerator(openKey);
+                            open.setOnAction(actionEvent -> { System.out.println("CTRL+O"); });
 
-                 open.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
+                        // FileOpener
+                            FileChooser fileOpener = new FileChooser();
+                                open.setOnAction(e -> { File selectedFile = fileOpener.showOpenDialog(stage); });
 
             // SAVE
-            MenuItem save = new MenuItem("Save");
-                KeyCombination saveKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-                    save.setAccelerator(saveKey);
-                        save.setOnAction(actionEvent -> { System.out.println("CTRL+S"); });
+                MenuItem save = new MenuItem("Save");
+                    KeyCombination saveKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+                        save.setAccelerator(saveKey);
+                            save.setOnAction(actionEvent -> { System.out.println("CTRL+S"); });
 
             // EXIT - this closes the application
-            MenuItem exit = new MenuItem("Exit");
-                    exit.setOnAction(ActionEvent -> { System.exit(0); });
+                MenuItem exit = new MenuItem("Exit");
+                        exit.setOnAction(ActionEvent -> { System.exit(0); });
 
 
                     // adding the menuItems to the menuBar
-                        file.getItems().add(newItem);
-                        file.getItems().add(open);
-                        file.getItems().add(save);
-                        file.getItems().add(exit);
-                        menuBar.getMenus().add(file);
+                        fileMenu.getItems().add(newItem);
+                        fileMenu.getItems().add(open);
+                        fileMenu.getItems().add(save);
+                        fileMenu.getItems().add(exit);
+                        menuBar.getMenus().add(fileMenu);
 
-        // Edit menu
-        Menu edit = new Menu("Edit");
+        // EDIT MENU
+            Menu edit = new Menu("Edit");
 
-            // CUT
-            MenuItem cut = new MenuItem("Cut");
-                KeyCombination cutKey = new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN);
-                    cut.setAccelerator(cutKey);
-                        cut.setOnAction(actionEvent -> { System.out.println("CTRL+X"); });
+            // cut
+                MenuItem cut = new MenuItem("Cut");
+                    KeyCombination cutKey = new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN);
+                        cut.setAccelerator(cutKey);
+                            cut.setOnAction(actionEvent -> { System.out.println("CTRL+X"); });
 
-            // COPY
-            MenuItem copy = new MenuItem("Copy");
-                 KeyCombination copyKey = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-                 copy.setAccelerator(copyKey);
-                    copy.setOnAction(actionEvent -> { System.out.println("CTRL+C"); });
+            // copy
+                MenuItem copy = new MenuItem("Copy");
+                    KeyCombination copyKey = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+                    copy.setAccelerator(copyKey);
+                        copy.setOnAction(actionEvent -> { System.out.println("CTRL+C"); });
 
-            // PASTE
-            MenuItem paste = new MenuItem("Paste");
-                KeyCombination pasteKey = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
-                paste.setAccelerator(pasteKey);
-                    paste.setOnAction(actionEvent -> { System.out.println("CTRL+V"); });
+            // paste
+                MenuItem paste = new MenuItem("Paste");
+                    KeyCombination pasteKey = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
+                        paste.setAccelerator(pasteKey);
+                            paste.setOnAction(actionEvent -> { System.out.println("CTRL+V"); });
 
                 // adding the menuItems to the menuBar
                     edit.getItems().add(cut);
@@ -107,19 +119,19 @@ public class App extends Application {
                     menuBar.getMenus().add(edit);
 
 
-        // Run menu
-        Menu run = new Menu("Run");
-        MenuItem RunCompile = new MenuItem("Run & Compile");
+        // RUN MENU
+            Menu run = new Menu("Run");
+                MenuItem RunCompile = new MenuItem("Run & Compile");
 
+            // adding run to the menu
+                run.getItems().add(RunCompile);
+                    menuBar.getMenus().add(run);
 
-        run.getItems().add(RunCompile);
-        menuBar.getMenus().add(run);
+        // ABOUT
+            Menu about = new Menu("About");
+                MenuItem aboutApp = new MenuItem("About this application");
 
-        // About
-        Menu about = new Menu("About");
-        MenuItem aboutApp = new MenuItem("About this application");
-
-            // Making a alert window
+            // making alert window
                     about.setOnAction(actionEvent -> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("About this application");
@@ -127,34 +139,41 @@ public class App extends Application {
                         alert.showAndWait();
                     });
 
-                    //adding about to the menuBar
+                    // adding about to the menuBar
                         about.getItems().add(aboutApp);
                         menuBar.getMenus().add(about);
 
-        // Buttons
+        // BUTTONS
             colorPicker = new ColorPicker();
+            colorPicker.setStyle("-fx-text-fill: red; -fx-font-family: arial; -fx-font-size: 12 px;");
                 vBoxtop.getChildren().add(colorPicker);
                     colorPicker.setOnAction(actionEvent -> { ColorPicker colorPicker = new ColorPicker();colorPicker.getValue(); }); // opens colorPicker
 
             clear = new Button("Clear");
+            clear.setStyle("-fx-text-fill: red; -fx-font-family: arial; -fx-font-size: 12 px;");
                 vBoxtop.getChildren().add(clear);
                     clear.setOnAction(actionEvent -> { tekstiAlue.clear(); }); // clears textField
 
 
         // UI
-        tekstiAlue = new TextArea();
-            // replaces tab with 4 whitespaces
-            tekstiAlue.setOnKeyPressed(event -> { if(event.getCode() == KeyCode.TAB) { int position =  tekstiAlue.getCaretPosition();tekstiAlue.replaceText(position-1,position, "    "); }});
+            tekstiAlue = new TextArea();
+                // replaces tab with 4 whitespaces
+                    tekstiAlue.setOnKeyPressed(event -> { if(event.getCode() == KeyCode.TAB) { int position =  tekstiAlue.getCaretPosition();tekstiAlue.replaceText(position-1,position, "    "); }});
 
-        BorderPane layout = new BorderPane();
-        layout.setTop(vBoxtop);
-        layout.setCenter(tekstiAlue);
 
-        Scene scene = new Scene(layout, 600, 480);
 
-        stage.setScene(scene);
-        stage.setTitle(title);
-        stage.show();
+        // LAYOUT
+            BorderPane layout = new BorderPane();
+            layout.setTop(vBoxtop);
+            layout.setCenter(tekstiAlue);
+
+        // SCENE
+            Scene scene = new Scene(layout, 600, 480);
+
+        // STAGE
+            stage.setScene(scene);
+            stage.setTitle(title);
+            stage.show();
     }
 
     public static void main(String[] args) {
