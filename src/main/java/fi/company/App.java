@@ -1,5 +1,6 @@
 package fi.company;
 
+import fi.company.utilities.FileHandler;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,10 +17,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import fi.company.utilities.FileHandler;
+import java.io.*;
+import java.nio.Buffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -33,9 +36,14 @@ public class App extends Application {
     private Button clear;
     private TextArea tekstiAlue;
     private ColorPicker colorPicker;
+    private BorderPane layout;
+    private MenuBar menuBar;
+    private VBox vBoxTop;
+
+
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage)  {
 
         // LOCALIZATION SETTINGS
             Locale locale = Locale.getDefault();
@@ -43,12 +51,16 @@ public class App extends Application {
             ResourceBundle labels = ResourceBundle.getBundle("ui", locale);
             String title = labels.getString("title");
 
-        // HANDLING FILES
-            File file = new File("resources/textFile.txt");
 
         // ELEMENTS FOR STAGE
-            MenuBar menuBar = new MenuBar(); // top panel
-            VBox vBoxtop = new VBox(menuBar); // top panel
+            tekstiAlue = new TextArea(); // middle
+            layout = new BorderPane(); // top
+            menuBar = new MenuBar(); // top
+            vBoxTop = new VBox(menuBar); // top
+
+        // FILE HANDLING
+            FileHandler fh = new FileHandler();
+
 
         // FILE MENU
             Menu fileMenu = new Menu("File");
@@ -61,7 +73,10 @@ public class App extends Application {
 
                         // FileChooser
                             FileChooser fileChooser = new FileChooser();
-                                newItem.setOnAction(e -> { File selectedFile = fileChooser.showOpenDialog(stage); });
+                                newItem.setOnAction(e -> {
+                                    File selectedFile = fileChooser.showOpenDialog(stage);
+
+                                });
 
             // OPEN
                 MenuItem open = new MenuItem("Open");
@@ -71,13 +86,25 @@ public class App extends Application {
 
                         // FileOpener
                             FileChooser fileOpener = new FileChooser();
-                                open.setOnAction(e -> { File selectedFile = fileOpener.showOpenDialog(stage); });
+                                open.setOnAction(e -> {
+                                    File selectedFile = fileOpener.showOpenDialog(stage);
+                                    String path = selectedFile.getAbsolutePath(); // contains selected files PATH
+                                    fh.setFilePath(path);
+                                    String sisalto = fh.open(); // stores text content to sisalto string
+                                    tekstiAlue.setText(sisalto); // adds sisalto to the tekstiAlue
+                                });
 
             // SAVE
                 MenuItem save = new MenuItem("Save");
                     KeyCombination saveKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
                         save.setAccelerator(saveKey);
-                            save.setOnAction(actionEvent -> { System.out.println("CTRL+S"); });
+                            save.setOnAction(e -> {
+                                System.out.println("CTRL+S");
+                            });
+                            // Saving the text
+                            save.setOnAction(e -> { String sisalto = tekstiAlue.getText();
+                            fh.save(sisalto);
+                            });
 
             // EXIT - this closes the application
                 MenuItem exit = new MenuItem("Exit");
@@ -146,29 +173,28 @@ public class App extends Application {
         // BUTTONS
             colorPicker = new ColorPicker();
             colorPicker.setStyle("-fx-text-fill: red; -fx-font-family: arial; -fx-font-size: 12 px;");
-                vBoxtop.getChildren().add(colorPicker);
+                vBoxTop.getChildren().add(colorPicker);
                     colorPicker.setOnAction(actionEvent -> { ColorPicker colorPicker = new ColorPicker();colorPicker.getValue(); }); // opens colorPicker
 
             clear = new Button("Clear");
             clear.setStyle("-fx-text-fill: red; -fx-font-family: arial; -fx-font-size: 12 px;");
-                vBoxtop.getChildren().add(clear);
+                vBoxTop.getChildren().add(clear);
                     clear.setOnAction(actionEvent -> { tekstiAlue.clear(); }); // clears textField
 
 
         // UI
-            tekstiAlue = new TextArea();
                 // replaces tab with 4 whitespaces
                     tekstiAlue.setOnKeyPressed(event -> { if(event.getCode() == KeyCode.TAB) { int position =  tekstiAlue.getCaretPosition();tekstiAlue.replaceText(position-1,position, "    "); }});
 
 
 
         // LAYOUT
-            BorderPane layout = new BorderPane();
-            layout.setTop(vBoxtop);
+            layout.setTop(vBoxTop);
             layout.setCenter(tekstiAlue);
+            layout.setStyle("-fx-background-color:white");
 
         // SCENE
-            Scene scene = new Scene(layout, 600, 480);
+            Scene scene = new Scene(layout, 1600,900 );
 
         // STAGE
             stage.setScene(scene);

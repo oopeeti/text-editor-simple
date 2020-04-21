@@ -1,2 +1,3 @@
 fi\company\App.class
 module-info.class
+fi\company\utilities\FileHandler.class
