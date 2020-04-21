@@ -27,22 +27,22 @@ public class FileHandler {
     }
 
     // Opens the given file and returns the content, uses filePath
-    public String open() {
-        try {
-            String content = Files.readString(Paths.get(filePath));
-            return content;
-        } catch (IOException e) {
-            System.out.println("Error");
-            return null;
+        public String open() {
+            try {
+                String content = Files.readString(Paths.get(filePath));
+                return content;
+            } catch (IOException e) {
+                System.out.println("Error");
+                return null;
+            }
         }
-    }
 
     // Saves the content to given file path
-    public void save(String content) {
-        try {
-            Files.writeString(Paths.get(filePath), content);
-        } catch (IOException e) {
-            System.out.println("Error");
+        public void save(String content) {
+            try {
+                Files.writeString(Paths.get(filePath), content);
+            } catch (IOException e) {
+                System.out.println("Error");
+            }
         }
-    }
 }
