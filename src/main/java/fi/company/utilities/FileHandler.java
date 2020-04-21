@@ -1,5 +1,7 @@
 package fi.company.utilities;
 
+import javafx.scene.control.Alert;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,7 +34,10 @@ public class FileHandler {
                 String content = Files.readString(Paths.get(filePath));
                 return content;
             } catch (IOException e) {
-                System.out.println("Error");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Error");
+                alert.setContentText("Something went wrong!");
+                alert.showAndWait();
                 return null;
             }
         }
@@ -42,7 +47,10 @@ public class FileHandler {
             try {
                 Files.writeString(Paths.get(filePath), content);
             } catch (IOException e) {
-                System.out.println("Error");
-            }
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Error");
+                    alert.setContentText("Something went wrong!");
+                    alert.showAndWait();
+                }
         }
 }
