@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import fi.company.utilities.FileHandler;
@@ -34,14 +35,14 @@ public class App extends Application {
 
 
     // showing attributes
-    private Button clear;
-    private TextArea tekstiAlue;
-    private ColorPicker colorPicker;
-    private BorderPane layout;
-    private MenuBar menuBar;
-    private VBox vBoxTop;
-    private TextField searchBar;
-
+    private Button clear; // clear button
+    private TextArea tekstiAlue; // area for text
+    private ColorPicker colorPicker; // color picker
+    private BorderPane layout; // layout
+    private MenuBar menuBar; // menu bar
+    private VBox vBoxTop; // horizontal box on top
+    private TextField searchBar; // searchbar
+    private ToolBar toolBar;
 
     @Override
     public void start(Stage stage) {
@@ -57,7 +58,12 @@ public class App extends Application {
         tekstiAlue = new TextArea(); // middle
         layout = new BorderPane(); // top
         menuBar = new MenuBar(); // top
-        vBoxTop = new VBox(menuBar); // top
+        vBoxTop= new VBox(); // top
+        toolBar = new ToolBar();
+        searchBar = new TextField();
+        vBoxTop.getChildren().add(menuBar);
+        vBoxTop.getChildren().add(toolBar);
+
 
         // FILE HANDLING
         FileHandler fh = new FileHandler();
@@ -179,30 +185,38 @@ public class App extends Application {
         menuBar.getMenus().add(about);
 
         // BUTTONS
-        colorPicker = new ColorPicker();
-        colorPicker.setStyle("-fx-text-fill: red; -fx-font-family: arial; -fx-font-size: 12 px;");
-        vBoxTop.getChildren().add(colorPicker);
-        colorPicker.setOnAction(actionEvent -> {
-            ColorPicker colorPicker = new ColorPicker();
-            colorPicker.getValue();
-        }); // opens colorPicker
 
+            // clear button
         clear = new Button("Clear");
         clear.setStyle("-fx-text-fill: red; -fx-font-family: arial; -fx-font-size: 12 px;");
-        vBoxTop.getChildren().add(clear);
+        toolBar.getItems().add(clear);
         clear.setOnAction(actionEvent -> {
-            tekstiAlue.clear();
-        }); // clears textField
+            tekstiAlue.clear(); // clears textField
+        });
+
+            // color picker
+        colorPicker = new ColorPicker();
+        colorPicker.setStyle("-fx-text-fill: red; -fx-font-family: arial; -fx-font-size: 12 px;");
+        toolBar.getItems().add(colorPicker);
+        colorPicker.setOnAction(actionEvent -> {
+            ColorPicker colorPicker = new ColorPicker();
+            colorPicker.getValue(); // opens colorPicker
+        });
+
+        // Search bar
+
+        searchBar.setText("search...");
+        toolBar.getItems().add(searchBar);
 
 
         // UI
-        // replaces tab with 4 whitespaces
-        tekstiAlue.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.TAB) {
-                int position = tekstiAlue.getCaretPosition();
+            // replaces tab with 4 whitespaces
+            tekstiAlue.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.TAB) {
+                 int position = tekstiAlue.getCaretPosition();
                 tekstiAlue.replaceText(position - 1, position, "    ");
-            }
-        });
+                }
+            });
 
 
         // LAYOUT
