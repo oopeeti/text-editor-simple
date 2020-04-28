@@ -4,6 +4,7 @@ import fi.company.utilities.FileHandler;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -34,7 +35,7 @@ import java.util.ResourceBundle;
 public class App extends Application {
 
 
-    // showing attributes
+    // introducing attributes
     private Button clear;
     private TextArea tekstiAlue;
     private ColorPicker colorPicker;
@@ -60,7 +61,9 @@ public class App extends Application {
         menuBar = new MenuBar(); // top
         vBoxTop= new VBox(); // top
         toolBar = new ToolBar();  // toolBar for clear, colorPicker and search
-        searchBar = new TextField(); // textfield for text
+        searchBar = new TextField(); // textField for text
+
+
         vBoxTop.getChildren().add(menuBar); // adding menuBar to vBox
         vBoxTop.getChildren().add(toolBar); // adding toolBar to vBox
 
@@ -166,15 +169,6 @@ public class App extends Application {
         edit.getItems().add(paste);
         menuBar.getMenus().add(edit);
 
-
-        // RUN MENU
-        Menu run = new Menu("Run");
-        MenuItem RunCompile = new MenuItem("Run & Compile");
-
-        // adding run to the menu
-        run.getItems().add(RunCompile);
-        menuBar.getMenus().add(run);
-
         // ABOUT
         Menu about = new Menu("About");
         MenuItem aboutApp = new MenuItem("About this application");
@@ -212,7 +206,7 @@ public class App extends Application {
 
         // Search bar
 
-        searchBar.setText("search...");
+        searchBar.setPromptText("Search...");
         toolBar.getItems().add(searchBar);
 
 
