@@ -4,6 +4,7 @@ import fi.company.utilities.FileHandler;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -25,6 +27,7 @@ import java.nio.Buffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Key;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -42,7 +45,7 @@ public class App extends Application {
     private BorderPane layout;
     private MenuBar menuBar;
     private VBox vBoxTop;
-    private TextField searchBar;
+    private TextField searchField;
     private ToolBar toolBar;
 
     @Override
@@ -61,15 +64,10 @@ public class App extends Application {
         menuBar = new MenuBar(); // top
         vBoxTop= new VBox(); // top
         toolBar = new ToolBar();  // toolBar for clear, colorPicker and search
-        searchBar = new TextField(); // textField for text
-
+        searchField = new TextField(); // textField for text
 
         vBoxTop.getChildren().add(menuBar); // adding menuBar to vBox
         vBoxTop.getChildren().add(toolBar); // adding toolBar to vBox
-
-
-        // FILE HANDLING
-
 
         // FILE MENU
         Menu fileMenu = new Menu("File");
@@ -78,7 +76,7 @@ public class App extends Application {
         MenuItem newItem = new MenuItem("New");
         KeyCombination newItemKey = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
         newItem.setAccelerator(newItemKey);
-        newItem.setOnAction(actionEvent -> {
+        newItem.setOnAction(e -> {
             System.out.println("CTRL+N");
         });
 
@@ -86,7 +84,7 @@ public class App extends Application {
         MenuItem open = new MenuItem("Open");
         KeyCombination openKey = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
         open.setAccelerator(openKey);
-        open.setOnAction(actionEvent -> {
+        open.setOnAction(e -> {
             System.out.println("CTRL+O");
         });
 
@@ -124,7 +122,7 @@ public class App extends Application {
 
         // EXIT - this closes the application
         MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(ActionEvent -> {
+        exit.setOnAction(e -> {
             System.exit(0);
         });
 
@@ -143,7 +141,7 @@ public class App extends Application {
         MenuItem cut = new MenuItem("Cut");
         KeyCombination cutKey = new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN);
         cut.setAccelerator(cutKey);
-        cut.setOnAction(actionEvent -> {
+        cut.setOnAction(e -> {
             System.out.println("CTRL+X");
         });
 
@@ -151,7 +149,7 @@ public class App extends Application {
         MenuItem copy = new MenuItem("Copy");
         KeyCombination copyKey = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
         copy.setAccelerator(copyKey);
-        copy.setOnAction(actionEvent -> {
+        copy.setOnAction(e -> {
             System.out.println("CTRL+C");
         });
 
@@ -159,11 +157,11 @@ public class App extends Application {
         MenuItem paste = new MenuItem("Paste");
         KeyCombination pasteKey = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
         paste.setAccelerator(pasteKey);
-        paste.setOnAction(actionEvent -> {
+        paste.setOnAction(e -> {
             System.out.println("CTRL+V");
         });
 
-        // adding the menuItems to the menuBar
+         // adding the menuItems to the menuBar
         edit.getItems().add(cut);
         edit.getItems().add(copy);
         edit.getItems().add(paste);
@@ -205,9 +203,17 @@ public class App extends Application {
         });
 
         // Search bar
+        searchField.setPromptText("Search...");
+        searchField.setOnKeyPressed(e -> {
+            if(e.getCode() == KeyCode.ENTER) { // When enter is pressed it finds the text
+                System.out.println("Enter");
+                String searchText = searchField.getText();
+                int index = tekstiAlue.getText().indexOf(searchText);
+                tekstiAlue.selectRange(index, index + searchText.length());
+            }
+        });
 
-        searchBar.setPromptText("Search...");
-        toolBar.getItems().add(searchBar);
+        toolBar.getItems().add(searchField);
 
 
         // UI
