@@ -35,13 +35,13 @@ public class App extends Application {
 
 
     // showing attributes
-    private Button clear; // clear button
-    private TextArea tekstiAlue; // area for text
-    private ColorPicker colorPicker; // color picker
-    private BorderPane layout; // layout
-    private MenuBar menuBar; // menu bar
-    private VBox vBoxTop; // horizontal box on top
-    private TextField searchBar; // searchbar
+    private Button clear;
+    private TextArea tekstiAlue;
+    private ColorPicker colorPicker;
+    private BorderPane layout;
+    private MenuBar menuBar;
+    private VBox vBoxTop;
+    private TextField searchBar;
     private ToolBar toolBar;
 
     @Override
@@ -59,14 +59,13 @@ public class App extends Application {
         layout = new BorderPane(); // top
         menuBar = new MenuBar(); // top
         vBoxTop= new VBox(); // top
-        toolBar = new ToolBar();
-        searchBar = new TextField();
-        vBoxTop.getChildren().add(menuBar);
-        vBoxTop.getChildren().add(toolBar);
+        toolBar = new ToolBar();  // toolBar for clear, colorPicker and search
+        searchBar = new TextField(); // textfield for text
+        vBoxTop.getChildren().add(menuBar); // adding menuBar to vBox
+        vBoxTop.getChildren().add(toolBar); // adding toolBar to vBox
 
 
         // FILE HANDLING
-        FileHandler fh = new FileHandler();
 
 
         // FILE MENU
@@ -89,14 +88,19 @@ public class App extends Application {
         });
 
         // FileOpener
-        FileChooser fileOpener = new FileChooser();
-        open.setOnAction(e -> {
-            File selectedFile = fileOpener.showOpenDialog(stage);
-            String path = selectedFile.getAbsolutePath(); // contains selected files PATH
-            fh.setFilePath(path);
-            String sisalto = fh.open(); // stores text content to sisalto string
-            tekstiAlue.setText(sisalto); // adds sisalto to the tekstiAlue
-        });
+            FileHandler fh = new FileHandler();
+            FileChooser fileOpener = new FileChooser();
+            open.setOnAction(e -> {
+                    File selectedFile = fileOpener.showOpenDialog(stage);
+                    String path = selectedFile.getAbsolutePath(); // contains selected files PATH
+                    fh.setFilePath(path);
+                    Thread thread = new Thread(() -> {
+                        String sisalto = fh.open(); // stores text content to sisalto string
+                        tekstiAlue.setText(sisalto); // adds sisalto to the tekstiAlue
+                    });
+                    thread.start();
+            });
+
 
         // SAVE
         MenuItem save = new MenuItem("Save");
@@ -108,8 +112,11 @@ public class App extends Application {
 
         // Saving the text
         save.setOnAction(e -> {
-            String sisalto = tekstiAlue.getText();
-            fh.save(sisalto);
+            Thread thread = new Thread(() -> {
+                String sisalto = tekstiAlue.getText();
+                fh.save(sisalto);
+            });
+            thread.start();
         });
 
         // EXIT - this closes the application
@@ -225,7 +232,7 @@ public class App extends Application {
         layout.setStyle("-fx-background-color:white");
 
         // SCENE
-        Scene scene = new Scene(layout, 1600, 900);
+        Scene scene = new Scene(layout, 800, 600);
 
         // STAGE
         stage.setScene(scene);
