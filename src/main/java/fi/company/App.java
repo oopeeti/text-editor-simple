@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Key;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -57,7 +58,7 @@ public class App extends Application {
         ResourceBundle labels = ResourceBundle.getBundle("ui", locale);
         String title = labels.getString("title");
 
-        // ELEMENTS FOR STAGE
+        // OBJECTS FOR STAGE
         tekstiAlue = new TextArea(); // middle
         layout = new BorderPane();
         menuBar = new MenuBar(); // top
@@ -122,7 +123,16 @@ public class App extends Application {
             // EXIT - this closes the application
             MenuItem exit = new MenuItem("Exit");
             exit.setOnAction(e -> {
-                System.exit(0);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION); // Are you sure alert
+                alert.setTitle("Are you sure?");
+                alert.setContentText("Are you sure you want to close this application?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if(result.get() == ButtonType.OK) { // if user selects OK, close the app
+                        System.exit(0);
+                    }
+                    if(result.get()==ButtonType.CANCEL) { // if user selects cancel, close the alert
+                        alert.close();
+                    }
             });
 
             // adding the menuItems to the menuBar
