@@ -174,7 +174,7 @@ public class App extends Application {
 
         // ABOUT
         Menu about = new Menu("About");
-        MenuItem aboutApp = new MenuItem("About this application");
+        MenuItem aboutAlert = new MenuItem("About this application");
             // making alert window
             about.setOnAction(actionEvent -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -184,7 +184,7 @@ public class App extends Application {
             });
 
             // adding about to the menuBar
-            about.getItems().add(aboutApp);
+            about.getItems().add(aboutAlert);
             menuBar.getMenus().add(about);
 
         // BUTTONS
@@ -215,7 +215,7 @@ public class App extends Application {
                     tekstiAlue.selectRange(index, index + searchText.length());
                 }
             });
-            toolBar.getItems().add(searchField);
+            toolBar.getItems().add(searchField); // adding search bar to the toolBar
 
 
         // UI
