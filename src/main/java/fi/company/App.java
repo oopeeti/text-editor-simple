@@ -107,18 +107,15 @@ public class App extends Application {
             MenuItem save = new MenuItem("Save");
             KeyCombination saveKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
             save.setAccelerator(saveKey);
-            save.setOnAction(e -> {
+                // Saving the text
+                save.setOnAction(e -> {
                 System.out.println("CTRL+S");
-            });
-
-            // Saving the text
-            save.setOnAction(e -> {
-                Thread thread = new Thread(() -> {
+                    Thread thread = new Thread(() -> {
                     String sisalto = tekstiAlue.getText();
                     fh.save(sisalto);
+                    });
+                    thread.start();
                 });
-                thread.start();
-            });
 
             // EXIT - this closes the application
             MenuItem exit = new MenuItem("Exit");
